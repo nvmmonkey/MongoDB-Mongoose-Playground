@@ -1,4 +1,5 @@
 // IMPORT ////
+const { formatUnits } = require("ethers/lib/utils.js")
 const mongoose = require("mongoose")
 const { run } = require("node:test")
 
@@ -25,7 +26,8 @@ const fruitSchema = new mongoose.Schema({
 
 const personSchema = new mongoose.Schema({
     name: String,
-    age: Number
+    age: Number,
+    favFruit: fruitSchema
 })
 
 // add item using Schema + *lodash npm* will purnous item  ////
@@ -37,18 +39,13 @@ const fruit = new Fruit ({
     review: "Peaches are sweet"
 }) //fruit become "fruits" collection in MongoDB
 
-const Person = mongoose.model("Person", personSchema)
-const person = new Person ({
-    name: "John",
-    age: 37
-}) //person become "people" collection in MongoDB
 
 
-// Aux confirm log function ////
+// confirm log function ////
 function confirm () {
-    const i = 1
+    const i = 0
     if (i ==1){
-        fruit.save()
+        // fruit.save()
         // person.save()
         console.log("Item added!")
     } else {
@@ -57,7 +54,7 @@ function confirm () {
 }
 
 
-// insertMany practice ////
+// insertMany mongoose ////
 const kiwi = new Fruit({
     name: "Kiwi",
     score: 10,
@@ -76,6 +73,29 @@ const banana = new Fruit({
     review: "Solid!"
 })
 
+const pineapple = new Fruit({
+    name: "Pineapple",
+    score: 9,
+    review: "Great fruit!"
+})
+
+const watermelon = new Fruit({
+    name: "Watermelon",
+    score: 8,
+    review: "Juicy!"
+})
+
+watermelon.save() //save new pineapple to fruits
+
+// add item using Schema + *lodash npm* will purnous item  ////
+const Person = mongoose.model("Person", personSchema)
+const person = new Person ({
+    name: "Amy",
+    age: 12,
+    favFruit: pineapple
+}) //person become "people" collection in MongoDB
+
+
 // fruits collection operator & error callback() ////
 // Fruit.insertMany([kiwi, orange, banana], function(err){
 //     if(err){
@@ -85,8 +105,9 @@ const banana = new Fruit({
 //     }
 // })
 
+
+// FIND mongoose ////
 Fruit.find(function(err, fruits){
-    
     if(err){
         console.log(err)
     }else{
@@ -98,6 +119,41 @@ Fruit.find(function(err, fruits){
 }
 })
 
+// updateOne mongoose ////
+// Fruit.updateOne({_id: "63adb72a60ad8299c92fc934"}, {name: "Peach"}, function(err){
+//     if(err){
+//         console.log(err)
+//     }else{
+//         console.log("Successfully updated the document!")
+//     }
+// }) 
+
+Person.updateOne({name: "John"}, {favFruit: watermelon}, function(err) {
+    if (err) {
+        console.log(err)
+    } else {
+        console.log("Successfully update John's favFruit!")
+    }
+})
+
+
+// deleteOne mongoose ////
+// Fruit.deleteOne({_id: "63adb72a60ad8299c92fc934"}, function(err){
+//     if(err){
+//         console.log(err)
+//     }else{
+//         console.log("Successfully deleted!")
+//     }
+// })
+
+// deleteMany mongoose ////
+// Person.deleteMany({name: "John"}, function(err){
+//     if (err) {
+//         console.log(err)
+//     } else {
+//         console.log("Successfully deleted all documents!")
+//     }
+// })
 
 
 
